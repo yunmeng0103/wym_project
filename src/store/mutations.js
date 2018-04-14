@@ -1,17 +1,23 @@
-//记录当前位置
-const record_address = (state, {
-  latitude,
-  longitude
-}) => {
-  state.latitude = latitude;
-  state.longitude = longitude;
-}
+import { setStore, getStore } from '../config/mUtils'
 
-//保存geohash
-const save_geohash = (state, geohash) => {
-  state.geohash = geohash;
-}
 export default {
-  record_address,
-  save_geohash
+  //记录当前位置
+  ['RECORD_ADDRESS'](state, {
+    latitude,
+    longitude
+  }) {
+    state.latitude = latitude;
+    state.longitude = longitude;
+  },
+  //保存geohash
+  ['SAVE_GEOHASH'](state, geohash) {
+    state.geohash = geohash;
+  },
+  // 记录用户信息
+  ['RECORD_USERINFO'](state, info) {
+    state.userInfo = info;
+    state.login = true;
+    //永久储存localStorage
+    setStore('user_id', info.user_id);
+  }
 }

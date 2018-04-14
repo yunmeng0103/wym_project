@@ -37,7 +37,7 @@ export default new Router({
       path: '/shopDetail',
       component: shopDetail,
       children: [{
-        path: '/', //商品列表
+        path: '/', //默认商品列表
         component: goods,
       }, {
         path: 'goods', //商品列表

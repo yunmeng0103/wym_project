@@ -79,12 +79,12 @@ export default {
       this.geohash = this.$route.query.geohash
     }
     //保存geohash 到vuex
-    this.save_geohash(this.geohash);
+    this.SAVE_GEOHASH(this.geohash);
     // //获取位置信息
     let res = await msiteAdress(this.geohash);
     this.msietTitle = res.name;
     // // 记录当前经度纬度
-    this.record_address(res);
+    this.RECORD_ADDRESS(res);
     this.hasGetData = true;
     // this.initScroll();
   },
@@ -122,7 +122,7 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'record_address', 'save_geohash'
+      'RECORD_ADDRESS', 'SAVE_GEOHASH'
     ]),
     initScroll() {
       this.menuScroll = new BScroll(this.$refs.shop_list_container, {
