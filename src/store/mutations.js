@@ -19,5 +19,9 @@ export default {
     state.login = true;
     //永久储存localStorage
     setStore('user_id', info.user_id);
+  },
+  ['OUT_LOGIN'](state) {
+    state.userInfo = {};
+    state.login = false;
   }
 }

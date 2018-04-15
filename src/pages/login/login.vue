@@ -109,7 +109,7 @@ export default {
     },
     closeTip() {
       this.showAlert = false;
-    }
+    },
   }
 }
 

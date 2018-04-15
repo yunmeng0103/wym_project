@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="shop-detail-wrap">
     <v-headTop :head-title="shopName" :back-path="backPath" class="header-top" go-back='true'>
     </v-headTop>
     <div class="header">
@@ -166,9 +166,6 @@ export default {
   font-size: 0;
 }
 
-
-
-
 /* 头像 */
 
 .header .content-wrap .avatar {
@@ -184,8 +181,6 @@ export default {
   display: inline-block;
   margin-left: 16px;
 }
-
-
 
 /*// 商品标题*/
 
@@ -215,13 +210,6 @@ export default {
   line-height: 18px;
   font-weight: bold;
 }
-
-
-
-
-
-
-
 
 /*// 商品描述*/
 
@@ -310,13 +298,6 @@ export default {
   font-size: 10px;
 }
 
-
-
-
-
-
-
-
 /*// 模糊背景*/
 
 .header .background {
@@ -328,13 +309,6 @@ export default {
   filter: blur(10px);
   z-index: -1;
 }
-
-
-
-
-
-
-
 
 /*// 公告*/
 

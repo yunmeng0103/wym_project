@@ -43,7 +43,7 @@
         </router-link>
       </ul>
     </div>
-    <div class="profile-1reTe">
+    <div class="profile-1reTe" v-if="userInfo">
       <!-- 我的订单 -->
       <router-link to='/order' class="myorder">
         <aside>
@@ -77,8 +77,8 @@
         </div>
       </router-link>
     </div>
-    <div class="profile-1reTe">
-      <router-link to='/' class="login-out">退出登录</router-link>
+    <div class="profile-1reTe" v-if="userInfo">
+      <div class="exitlogin" @click="exitlogin">退出登录</div>
     </div>
     <v-footGuide></v-footGuide>
     <transition name="router-slid" mode="out-in">
@@ -90,6 +90,8 @@
 import { mapState, mapMutations } from 'vuex'
 import headTop from '../../components/header/head'
 import footGuide from '../../components/footer/footGuide.vue'
+import { signout } from '../../service/getData.js'
+import { removeStore } from '../../config/mUtils'
 import { imgBaseUrl } from '../../config/env.js'
 import { getImgPath } from '../../components/common/mixin.js'
 
@@ -135,9 +137,11 @@ export default {
 
   methods: {
     ...mapMutations([
-      // 'SAVE_AVANDER'
+      'OUT_LOGIN'
     ]),
     initData() {
+        console.log(this.userInfo);
+      
       if (this.userInfo && this.userInfo.user_id) {
         this.avatar = this.userInfo.avatar;
         this.username = this.userInfo.username;
@@ -150,6 +154,17 @@ export default {
         this.mobile = '暂无绑定手机号';
       }
     },
+    //退出登录
+    async exitlogin() {
+      this.OUT_LOGIN();
+      this.reload();
+      removeStore('user_id')
+      await signout();
+    },
+    //点击图标刷新页面
+    reload() {
+      window.location.reload();
+    },
   },
   watch: {
     userInfo: function(value) {
@@ -161,6 +176,11 @@ export default {
 </script>
 <style scoped>
 .mine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
   background-color: #F5F5F5;
 }
 
@@ -353,7 +373,7 @@ export default {
   height: 100%;
 }
 
-.profile-1reTe .login-out {
+.profile-1reTe .exitlogin {
   width: 100%;
   height: 100%;
   display: block;
