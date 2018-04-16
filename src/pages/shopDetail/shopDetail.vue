@@ -27,10 +27,10 @@
           </div>
         </div>
         <!-- 活动数量 -->
-        <!-- <div class="support-count" v-if="seller.supports" @click="showDetail">
+        <div class="support-count" v-if="seller.supports" @click="showDetail">
           <span class="count">{{seller.supports.length}}个</span>
           <i class="icon-keyboard_arrow_right"></i>
-        </div> -->
+        </div>
       </div>
       <!-- 模糊背景 -->
       <div class="background">
@@ -91,6 +91,10 @@
     </div>
     <!-- 路由设置 -->
     <router-view :seller="seller" class="detail_wrap"></router-view>
+    <!-- 加载前的背景 -->
+    <section class="animation_opactiy shop_back_svg_container" v-if="showLoading">
+      <img src="../../images/shop_back_svg.svg">
+    </section>
   </div>
 </template>
 <script>
@@ -102,6 +106,7 @@ export default {
     return {
       shopName: "选择商品",
       backPath: "/home",
+      showLoading: true, //显示加载动画
       detail: false,
       seller: appData.seller,
       navBar: [{
@@ -117,11 +122,17 @@ export default {
       ]
     };
   },
+  mounted() {
+    this.initData();
+  },
   computed: {
 
   },
   // 点击元素调用方法，动态设置显示隐藏
   methods: {
+    async initData() {
+      this.showLoading = false;
+    },
     showDetail() {
       this.detail = true;
     },
@@ -166,6 +177,11 @@ export default {
   font-size: 0;
 }
 
+
+
+
+
+
 /* 头像 */
 
 .header .content-wrap .avatar {
@@ -181,6 +197,11 @@ export default {
   display: inline-block;
   margin-left: 16px;
 }
+
+
+
+
+
 
 /*// 商品标题*/
 
@@ -210,6 +231,11 @@ export default {
   line-height: 18px;
   font-weight: bold;
 }
+
+
+
+
+
 
 /*// 商品描述*/
 
@@ -273,6 +299,11 @@ export default {
 }
 
 
+
+
+
+
+
 /*// 活动数量*/
 
 .header .content-wrap .support-count {
@@ -298,6 +329,11 @@ export default {
   font-size: 10px;
 }
 
+
+
+
+
+
 /*// 模糊背景*/
 
 .header .background {
@@ -309,6 +345,11 @@ export default {
   filter: blur(10px);
   z-index: -1;
 }
+
+
+
+
+
 
 /*// 公告*/
 
@@ -352,6 +393,11 @@ export default {
   right: 12px;
   top: 8px;
 }
+
+
+
+
+
 
 
 
@@ -406,6 +452,11 @@ export default {
 
 
 
+
+
+
+
+
 /*// 星级评论*/
 
 .header .detail .detail-wrap .detail-main .name {
@@ -420,6 +471,11 @@ export default {
   padding: 2px 0;
   text-align: center;
 }
+
+
+
+
+
 
 
 /*// 优惠标题*/
@@ -442,6 +498,11 @@ export default {
   font-weight: 700;
   font-size: 14px;
 }
+
+
+
+
+
 
 
 /*// 优惠列表*/
@@ -515,6 +576,11 @@ export default {
 }
 
 
+
+
+
+
+
 /*// 商家描述*/
 
 .header .detail .detail-wrap .detail-main .bulletin {
@@ -527,6 +593,11 @@ export default {
   line-height: 24px;
   font-size: 12px;
 }
+
+
+
+
+
 
 
 /*// 关闭按钮*/
@@ -580,6 +651,19 @@ export default {
   top: 224px;
   width: 100%;
   overflow: hidden;
+}
+
+.shop_back_svg_container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.shop_back_svg_container img {
+  width: 100%;
+  height: 100%;
 }
 
 </style>

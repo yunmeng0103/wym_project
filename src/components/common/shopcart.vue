@@ -45,6 +45,7 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import BScroll from 'better-scroll';
 import cartcontrol from './cartcontrol.vue';
 export default {
@@ -66,10 +67,16 @@ export default {
   },
   data() {
     return {
-      flag: false
+      flag: false,
+      shopId: null, //商店id值
     }
   },
+  mounted() {
+  },
   computed: {
+    ...mapState([
+      'geohash'
+    ]),
     // 总价格
     totalPrice() {
       let total = 0;
@@ -144,7 +151,11 @@ export default {
       if (this.totalPrice < this.minPrice) {
         return;
       }
-      window.alert(`支付${this.totalPrice}元`);
+      let geohash = this.geohash;
+      let shopId = this.shopId;
+      console.log(this.geohash);
+      this.$router.push({ path: '/confirmOrder', query: { geohash, shopId } })
+      // window.alert(`支付${this.totalPrice}元`);
     }
   },
   components: {
@@ -353,6 +364,7 @@ export default {
   background-color: rgba(0, 0, 0, .3);
   z-index: 11;
 }
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity .5s;

@@ -140,8 +140,6 @@ export default {
       'OUT_LOGIN'
     ]),
     initData() {
-        console.log(this.userInfo);
-      
       if (this.userInfo && this.userInfo.user_id) {
         this.avatar = this.userInfo.avatar;
         this.username = this.userInfo.username;
@@ -158,7 +156,7 @@ export default {
     async exitlogin() {
       this.OUT_LOGIN();
       this.reload();
-      removeStore('user_id')
+      removeStore('user_id');
       await signout();
     },
     //点击图标刷新页面
