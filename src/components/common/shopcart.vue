@@ -153,7 +153,6 @@ export default {
       }
       let geohash = this.geohash;
       let shopId = this.shopId;
-      console.log(this.geohash);
       this.$router.push({ path: '/confirmOrder', query: { geohash, shopId } })
       // window.alert(`支付${this.totalPrice}元`);
     }

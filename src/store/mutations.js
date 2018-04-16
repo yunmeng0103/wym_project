@@ -24,11 +24,7 @@ export default {
     state.userInfo = {};
     state.login = false;
   },
-  //确认订单页添加新的的地址
-  ['CONFIRM_ADDRESS'](state, newAddress) {
-    state.newAddress.push(newAddress);
-  },
-  //选择的地址
+  //选择的地址（chooseAddress页）
   ['CHOOSE_ADDRESS'](state, {
     address,
     index
@@ -36,8 +32,12 @@ export default {
     state.choosedAddress = address;
     state.addressIndex = index;
   },
-  //选择搜索的地址
+  //保存选择搜索的地址（搜索地址页）
   ['CHOOSE_SEARCH_ADDRESS'](state, place) {
     state.searchAddress = place;
+  },
+  //确认订单页添加新的的地址
+  ['CONFIRM_ADDRESS'](state, newAddress) {
+    state.newAddress.push(newAddress);
   },
 }
