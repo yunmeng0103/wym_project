@@ -47,15 +47,15 @@
     <!-- 底部购物车 -->
     <v-shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></v-shopcart>
     <!-- 详情页数据 -->
-    <!-- <v-food :food-detail="foodDetail" ref="food"></v-food> -->
+    <v-goodsDetail :food-detail="foodDetail" ref="food"></v-goodsDetail>
   </div>
 </template>
 <script>
-import appData from '../../../../data.json';
 import BScroll from 'better-scroll';
+import appData from '../../../../data.json';
 import cartcontrol from '../../../components/common/cartcontrol.vue';
 import shopcart from '../../../components/common/shopcart.vue';
-// import fooddetail from '../food/food.vue';
+import goodsDetail from './goodsDetail.vue';
 export default {
   props: {
     seller: {
@@ -110,7 +110,7 @@ export default {
   components: {
     'v-cartcontrol': cartcontrol,
     'v-shopcart': shopcart,
-    // 'v-food': fooddetail
+    'v-goodsDetail': goodsDetail
   },
   methods: {
     _initScroll() {

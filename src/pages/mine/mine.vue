@@ -29,21 +29,21 @@
     </div>
     <div class="info-data">
       <ul class="clear">
-        <router-link to="/balance" tag="li" class="info-data-link">
+        <router-link to="/mine/balance" tag="li" class="info-data-link">
           <span class="info-data-top"><b>{{parseInt(balance).toFixed(2)}}</b>元</span>
           <span class="info-data-bottom">我的余额</span>
         </router-link>
-        <router-link to="/benefit" tag="li" class="info-data-link">
+        <router-link to="/mine/benefit" tag="li" class="info-data-link">
           <span class="info-data-top"><b>{{count}}</b>个</span>
           <span class="info-data-bottom">我的优惠</span>
         </router-link>
-        <router-link to="/points" tag="li" class="info-data-link">
+        <router-link to="/mine/points" tag="li" class="info-data-link">
           <span class="info-data-top"><b>{{pointNumber}}</b>分</span>
           <span class="info-data-bottom">我的积分</span>
         </router-link>
       </ul>
     </div>
-    <div class="profile-1reTe">
+    <div class="profile-1reTe" v-if="userInfo">
       <!-- 我的订单 -->
       <router-link to='/order' class="myorder">
         <aside>
@@ -77,11 +77,11 @@
         </div>
       </router-link>
     </div>
-    <div class="profile-1reTe">
-      <router-link to='/' class="login-out">退出登录</router-link>
+    <div class="profile-1reTe" v-if="userInfo">
+      <div class="exitlogin" @click="exitlogin">退出登录</div>
     </div>
     <v-footGuide></v-footGuide>
-    <transition name="router-slid" mode="out-in">
+    <transition name="move" mode="out-in">
       <router-view></router-view>
     </transition>
   </div>
@@ -90,6 +90,8 @@
 import { mapState, mapMutations } from 'vuex'
 import headTop from '../../components/header/head'
 import footGuide from '../../components/footer/footGuide.vue'
+import { signout } from '../../service/getData.js'
+import { removeStore } from '../../config/mUtils'
 import { imgBaseUrl } from '../../config/env.js'
 import { getImgPath } from '../../components/common/mixin.js'
 
@@ -135,7 +137,7 @@ export default {
 
   methods: {
     ...mapMutations([
-      // 'SAVE_AVANDER'
+      'OUT_LOGIN'
     ]),
     initData() {
       if (this.userInfo && this.userInfo.user_id) {
@@ -150,6 +152,17 @@ export default {
         this.mobile = '暂无绑定手机号';
       }
     },
+    //退出登录
+    async exitlogin() {
+      this.OUT_LOGIN();
+      this.reload();
+      removeStore('user_id');
+      await signout();
+    },
+    //点击图标刷新页面
+    reload() {
+      window.location.reload();
+    },
   },
   watch: {
     userInfo: function(value) {
@@ -161,6 +174,11 @@ export default {
 </script>
 <style scoped>
 .mine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
   background-color: #F5F5F5;
 }
 
@@ -353,7 +371,7 @@ export default {
   height: 100%;
 }
 
-.profile-1reTe .login-out {
+.profile-1reTe .exitlogin {
   width: 100%;
   height: 100%;
   display: block;
@@ -363,15 +381,15 @@ export default {
   color: #f00;
 }
 
-.router-slid-enter-active,
-.router-slid-leave-active {
-  transition: all .4s;
+.move-enter-active,
+.move-leave-active {
+  transition: all .1s linear;
+  transform: translate3D(0, 0, 0);
 }
 
-.router-slid-enter,
-.router-slid-leave-active {
-  transform: translate3d(2rem, 0, 0);
-  opacity: 0;
+.move-enter,
+.move-leave-active {
+  transform: translate3D(100%, 0, 0);
 }
 
 </style>

@@ -49,7 +49,6 @@ export default {
 .cartcontrol .cart-decrease {
   display: inline-block;
   padding: 6px;
-  display: inline-block;
   line-height: 24px;
   font-size: 24px;
   color: rgb(0, 160, 220);

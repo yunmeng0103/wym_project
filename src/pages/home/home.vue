@@ -1,7 +1,6 @@
 <template>
-  <div>
+  <div class="home">
     <v-headTop signin-up='msite'>
-      <!-- <span slot='logo' class="head_logo" @click="reload"><i class="icon-add_circle"></i></span> -->
       <router-link to="/city" slot="msite-title" class="msite_title">
         <svg class="msite_icon">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#location"></use>
@@ -9,61 +8,57 @@
         <span class="title_text ellipsis">{{msietTitle}}</span>
       </router-link>
     </v-headTop>
-    <div class="search_box">
-      <router-link :to="'/search/' + geohash" class="search_area">
-        <svg class="link_search" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" version="1.1">
-          <circle cx="8" cy="8" r="6" stroke="#666" stroke-width="1" fill="none" />
-          <line x1="12" y1="12" x2="18" y2="18" style="stroke:#666;stroke-width:2" />
-        </svg>
-        <span>搜索</span>
-      </router-link>
-    </div>
-    <nav class="msite_nav">
-      <div class="swiper-container" v-if="foodTypes.length">
-        <div class="swiper-wrapper">
-          <div class="swiper-slide food_types_container" v-for="(item, index) in foodTypes" :key="index">
-            <router-link :to="{path: '/food', query: {geohash, title: foodItem.title, restaurant_category_id: getCategoryId(foodItem.link)}}" v-for="foodItem in item" :key="foodItem.id" class="link_to_food">
-              <figure>
-                <img :src="imgBaseUrl + foodItem.image_url">
-                <figcaption>{{foodItem.title}}</figcaption>
-              </figure>
-            </router-link>
-          </div>
-        </div>
-        <div class="swiper-pagination"></div>
+    <div class="home-scroll" ref="homeScroll">
+      <div class="search_box">
+        <router-link :to="'/search/' + geohash" class="search_area">
+          <svg class="link_search" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" version="1.1">
+            <circle cx="8" cy="8" r="6" stroke="#666" stroke-width="1" fill="none" />
+            <line x1="12" y1="12" x2="18" y2="18" style="stroke:#666;stroke-width:2" />
+          </svg>
+          <span>搜索</span>
+        </router-link>
       </div>
-      <img src="../../images/fl.svg" class="fl_back animation_opactiy" v-else>
-    </nav>
-    <div class="shop_list_container" ref="shop_list_container">
-      <header class="shop_header">
-        <svg class="shop_icon">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#shop"></use>
-        </svg>
-        <span class="shop_header_title">附近商家</span>
-      </header>
-      <v-shopList v-if="hasGetData" :geohash="geohash"></v-shopList>
+      <nav class="msite_nav">
+        <div class="swiper-container" v-if="foodTypes.length">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide food_types_container" v-for="(item, index) in foodTypes" :key="index">
+              <router-link :to="{path: '/food', query: {geohash, title: foodItem.title, restaurant_category_id: getCategoryId(foodItem.link)}}" v-for="foodItem in item" :key="foodItem.id" class="link_to_food">
+                <figure>
+                  <img :src="imgBaseUrl + foodItem.image_url">
+                  <figcaption>{{foodItem.title}}</figcaption>
+                </figure>
+              </router-link>
+            </div>
+          </div>
+          <div class="swiper-pagination"></div>
+        </div>
+        <img src="../../images/fl.svg" class="fl_back animation_opactiy" v-else>
+      </nav>
+      <div class="shop_list_container">
+        <header class="shop_header">
+          <svg class="shop_icon">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#shop"></use>
+          </svg>
+          <span class="shop_header_title">附近商家</span>
+        </header>
+        <v-shopList v-if="hasGetData" :geohash="geohash"></v-shopList>
+      </div>
+      <v-footGuide></v-footGuide>
     </div>
-    <v-footGuide></v-footGuide>
-    <transition name="loading">
-      <v-loading v-show="showLoading"></v-loading>
-    </transition>
   </div>
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
-import BScroll from 'better-scroll';
 import headTop from '../../../src/components/header/head.vue'
 import footGuide from '../../../src/components/footer/footGuide.vue'
-import loading from '../../../src/components/common/loading.vue'
-import shopList from '../../../src/pages/shopList/shoplist.vue'
-import { msiteAdress, msiteFoodTypes, cityGuess } from '../../../src/service/getData'
+import shopList from '../../../src/components/common/shoplist.vue'
+import { msiteAddress, msiteFoodTypes, cityGuess } from '../../../src/service/getData'
 import Swiper from '../../../static/lib/swiper.min.js'
 import '../../../static/lib/swiper.min.css';
 
 export default {
   data() {
     return {
-      showLoading: true, //显示加载动画
       geohash: '', //页面传递过来的地址geohash
       msietTitle: '请选择地址...', // msiet页面头部标题
       foodTypes: [], // 食品分类列表
@@ -79,19 +74,17 @@ export default {
       this.geohash = this.$route.query.geohash
     }
     //保存geohash 到vuex
-    this.save_geohash(this.geohash);
+    this.SAVE_GEOHASH(this.geohash);
     // //获取位置信息
-    let res = await msiteAdress(this.geohash);
+    let res = await msiteAddress(this.geohash);
     this.msietTitle = res.name;
     // // 记录当前经度纬度
-    this.record_address(res);
+    this.RECORD_ADDRESS(res);
     this.hasGetData = true;
-    // this.initScroll();
   },
   mounted() {
     //获取导航食品类型列表
     msiteFoodTypes(this.geohash).then(res => {
-      this.showLoading = false;
       let resLength = res.length;
       let resArr = [...res]; // 返回一个新的数组
       let foodArr = [];
@@ -109,30 +102,24 @@ export default {
         // autoplay: 2500,
         paginationClickable: true,
       });
-    })
-
+    });
   },
   components: {
     'v-headTop': headTop,
     'v-footGuide': footGuide,
     'v-shopList': shopList,
-    'v-loading': loading
   },
-  computed: {
-  },
+  computed: {},
   methods: {
     ...mapMutations([
-      'record_address', 'save_geohash'
+      'RECORD_ADDRESS', 'SAVE_GEOHASH'
     ]),
-    initScroll() {
-      this.menuScroll = new BScroll(this.$refs.shop_list_container, {
-        click: true
-      });
-    },
+    
     //点击图标刷新页面
     reload() {
       window.location.reload();
     },
+    //解码url地址，求去restaurant_category_id值
     getCategoryId(url) {
       let urlData = decodeURIComponent(url.split('=')[1].replace('&target_name', ''));
       if (/restaurant_category_id/gi.test(urlData)) {
@@ -146,6 +133,15 @@ export default {
 
 </script>
 <style scoped>
+.home {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #F5F5F5;
+}
+
 .msite_title {
   position: absolute;
   top: 50%;

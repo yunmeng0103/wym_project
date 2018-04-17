@@ -60,11 +60,11 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { shopList } from '../../../src/service/getData'
-import { imgBaseUrl } from '../../../src/config/env'
-import { loadMore, getImgPath } from '../../components/common/mixin'
-import toTop from '../../components/common/toTop'
-import loading from '../../components/common/loading'
+import { shopList } from '../../service/getData.js'
+import { imgBaseUrl } from '../../config/env.js'
+import { loadMore, getImgPath } from './mixin.js'
+import toTop from './toTop.vue'
+import loading from './loading.vue'
 // import ratingStar from './ratingStar'
 
 export default {
