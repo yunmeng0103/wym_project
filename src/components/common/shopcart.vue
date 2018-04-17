@@ -71,8 +71,7 @@ export default {
       shopId: null, //商店id值
     }
   },
-  mounted() {
-  },
+  mounted() {},
   computed: {
     ...mapState([
       'geohash'
@@ -126,7 +125,6 @@ export default {
         this.flag = false;
       } else {
         let show = !this.flag
-
         if (show) {
           this.$nextTick(() => {
             if (!this.scroll) {
@@ -151,9 +149,7 @@ export default {
       if (this.totalPrice < this.minPrice) {
         return;
       }
-      let geohash = this.geohash;
-      let shopId = this.shopId;
-      this.$router.push({ path: '/confirmOrder', query: { geohash, shopId } })
+      this.$router.push({ path: '/confirmOrder', query: { geohash: this.geohash, shopId: this.shopId } })
       // window.alert(`支付${this.totalPrice}元`);
     }
   },
@@ -168,7 +164,7 @@ export default {
   position: fixed;
   left: 0;
   bottom: 0;
-  z-index: 50;
+  z-index: 110;
   width: 100%;
   height: 48px;
 }

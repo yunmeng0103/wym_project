@@ -44,9 +44,6 @@
         <v-shopList v-if="hasGetData" :geohash="geohash"></v-shopList>
       </div>
       <v-footGuide></v-footGuide>
-      <transition name="loading">
-        <v-loading v-show="showLoading"></v-loading>
-      </transition>
     </div>
   </div>
 </template>
@@ -54,7 +51,6 @@
 import { mapState, mapMutations } from 'vuex'
 import headTop from '../../../src/components/header/head.vue'
 import footGuide from '../../../src/components/footer/footGuide.vue'
-import loading from '../../../src/components/common/loading.vue'
 import shopList from '../../../src/components/common/shoplist.vue'
 import { msiteAddress, msiteFoodTypes, cityGuess } from '../../../src/service/getData'
 import Swiper from '../../../static/lib/swiper.min.js'
@@ -63,7 +59,6 @@ import '../../../static/lib/swiper.min.css';
 export default {
   data() {
     return {
-      showLoading: true, //显示加载动画
       geohash: '', //页面传递过来的地址geohash
       msietTitle: '请选择地址...', // msiet页面头部标题
       foodTypes: [], // 食品分类列表
@@ -90,7 +85,6 @@ export default {
   mounted() {
     //获取导航食品类型列表
     msiteFoodTypes(this.geohash).then(res => {
-      this.showLoading = false;
       let resLength = res.length;
       let resArr = [...res]; // 返回一个新的数组
       let foodArr = [];
@@ -108,14 +102,12 @@ export default {
         // autoplay: 2500,
         paginationClickable: true,
       });
-    })
-
+    });
   },
   components: {
     'v-headTop': headTop,
     'v-footGuide': footGuide,
     'v-shopList': shopList,
-    'v-loading': loading
   },
   computed: {},
   methods: {

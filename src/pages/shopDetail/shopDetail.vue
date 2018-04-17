@@ -427,7 +427,7 @@ export default {
   overflow: auto;
   background: rgba(0, 0, 0, .75);
   font-size: 0;
-  z-index: 100;
+  z-index: 200;
 }
 
 .header .detail .detail-wrap {

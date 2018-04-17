@@ -50,9 +50,7 @@ export default {
 }
 
 .head_goback {
-  left: 0.4rem;
   width: 0.6rem;
-  height: 1rem;
   line-height: 2.2rem;
   margin-left: .4rem;
   color: #fff;

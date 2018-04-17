@@ -13,6 +13,9 @@ const addAddress = r => require.ensure([], () => r(require('../pages/confirmOrde
 const searchAddress = r => require.ensure([], () => r(require('../pages/confirmOrder/children/children/children/searchAddress.vue')), 'searchAddress')
 const order = r => require.ensure([], () => r(require('../pages/order/order.vue')), 'order')
 const mine = r => require.ensure([], () => r(require('../pages/mine/mine.vue')), 'mine')
+const balance = r => require.ensure([], () => r(require('../pages/mine/children/balance.vue')), 'balance')
+const benefit = r => require.ensure([], () => r(require('../pages/mine/children/benefit.vue')), 'benefit')
+const points = r => require.ensure([], () => r(require('../pages/mine/children/points.vue')), 'points')
 const login = r => require.ensure([], () => r(require('../pages/login/login.vue')), 'login')
 
 Vue.use(Router)
@@ -82,7 +85,17 @@ export default new Router({
     //我的
     {
       path: '/mine',
-      component: mine
+      component: mine,
+      children: [{
+        path: 'balance', //余额
+        component: balance,
+      }, {
+        path: 'benefit', //优惠
+        component: benefit,
+      }, {
+        path: 'points', //积分
+        component: points,
+      }]
     },
     //登录
     {

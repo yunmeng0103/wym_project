@@ -9,7 +9,7 @@
       <div class="confrim" @click="closeTip">确认</div>
     </section>
     <transition name="fade">
-      <div class="screen_cover"></div>
+      <div class="screen_cover" @click="closeTip"></div>
     </transition>
   </div>
 </template>

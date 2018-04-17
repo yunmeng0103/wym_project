@@ -3,27 +3,13 @@
     <v-headTop :head-title="loginTitle" goBack="true">
     </v-headTop>
     <form class="loginForm">
-      <section class="input_container">
-        <input type="text" placeholder="账号" v-model.lazy="userAccount">
+      <section class="input_container phone_number">
+        <input type="text" placeholder="手机号" autofocus name="phone" maxlength="11" v-model="phoneNumber">
       </section>
       <section class="input_container">
-        <input v-if="!showPassword" type="password" placeholder="密码" v-model="passWord">
-        <input v-else type="text" placeholder="密码" v-model="passWord">
-        <div class="button_switch" :class="{change_to_text: showPassword}">
-          <div class="circle_button" :class="{trans_to_right: showPassword}" @click="changePassWordType"></div>
-          <span>abc</span>
-          <span>...</span>
-        </div>
-      </section>
-      <section class="input_container captcha_code_container">
-        <input type="text" placeholder="验证码" maxlength="4" v-model="codeNumber">
-        <div class="img_change_img">
-          <img v-show="captchaCodeImg" :src="captchaCodeImg">
-          <div class="change_img" @click="getCaptchaCode">
-            <p>看不清</p>
-            <p>换一张</p>
-          </div>
-        </div>
+        <input type="text" placeholder="验证码" name="mobileCode" maxlength="6" v-model="mobileCode">
+        <button @click.prevent="getVerifyCode" :class="{right_phone_number:rightPhoneNumber}" v-show="!computedTime">获取验证码</button>
+        <button @click.prevent v-show="computedTime">已发送({{computedTime}}s)</button>
       </section>
     </form>
     <p class="login_tips">
@@ -48,60 +34,89 @@ export default {
   data() {
     return {
       loginTitle: "登录", //登录方式，默认短信登录
-      showPassword: false, // 是否显示密码
+      phoneNumber: null, //电话号码
+      mobileCode: null, //短信验证码
+      validate_token: null, //获取短信时返回的验证值，登录时需要
+      computedTime: 0, //倒数记时
       userInfo: null, //获取到的用户信息
-      userAccount: null, //用户名
-      passWord: null, //密码
-      captchaCodeImg: null, //验证码地址
-      codeNumber: null, //验证码
       showAlert: false, //显示提示组件
       alertText: null, //提示的内容
     }
   },
-  created() {
-    this.getCaptchaCode();
-  },
+  created() {},
   components: {
     'v-headTop': headTop,
     'v-alertTip': alertTip,
   },
   computed: {
+    //判断手机号码
+    rightPhoneNumber: function() {
+      return /^1\d{10}$/gi.test(this.phoneNumber)
+    }
   },
   methods: {
     ...mapMutations([
       'RECORD_USERINFO',
     ]),
-    //是否显示密码
-    changePassWordType() {
-      this.showPassword = !this.showPassword;
+    //获取短信验证码
+    async getVerifyCode() {
+      if (this.rightPhoneNumber) {
+        this.computedTime = 60;
+        this.timer = setInterval(() => {
+          this.computedTime--;
+          if (this.computedTime == 0) {
+            clearInterval(this.timer);
+          }
+        }, 1000)
+        //判读用户是否存在
+        // let exsis = await checkExsis(this.phoneNumber, 'mobile');
+        // if (exsis.message) {
+        //   this.showAlert = true;
+        //   this.alertText = exsis.message;
+        //   return
+        // } else if (!exsis.is_exists) {
+        //   this.showAlert = true;
+        //   this.alertText = '您输入的手机号尚未绑定';
+        //   return
+        // }
+        // 发送短信验证码
+        // let res = await mobileCode(this.phoneNumber);
+        // if (res.message) {
+        //   this.showAlert = true;
+        //   this.alertText = res.message;
+        //   return
+        // }
+        // this.validate_token = res.validate_token;
+      } else {
+        this.showAlert = true;
+        this.alertText = '请输入手机号码';
+      }
     },
-    //获取验证吗，线上环境使用固定的图片，生产环境使用真实的验证码
-    async getCaptchaCode() {
-      let res = await getcaptchas();
-      this.captchaCodeImg = res.code;
-    },
-    //发送登录信息
     async mobileLogin() {
-      if (!this.userAccount) {
+      if (!this.phoneNumber) {
         this.showAlert = true;
-        this.alertText = '请输入手机号/邮箱/用户名';
+        this.alertText = '请输入手机号码';
         return
-      } else if (!this.passWord) {
-        this.showAlert = true;
-        this.alertText = '请输入密码';
-        return
-      } else if (!this.codeNumber) {
+      } else if (!this.mobileCode) {
         this.showAlert = true;
         this.alertText = '请输入验证码';
         return
+      } else if (!this.rightPhoneNumber) {
+        this.showAlert = true;
+        this.alertText = '手机号码不正确';
+        return
+      } else if (!(/^\d{6}$/gi.test(this.mobileCode))) {
+        this.showAlert = true;
+        this.alertText = '短信验证码不正确';
+        return
       }
-      //用户名登录
-      this.userInfo = await accountLogin(this.userAccount, this.passWord, this.codeNumber);
+      //手机号登录
+      this.userInfo = await sendLogin(this.mobileCode, this.phoneNumber, this.validate_token);
       //如果返回的值不正确，则弹出提示框，返回的值正确则返回上一页
       if (!this.userInfo.user_id) {
         this.showAlert = true;
         this.alertText = this.userInfo.message;
-        this.getCaptchaCode();
+        if (!this.loginWay) this.getCaptchaCode();
       } else {
         this.RECORD_USERINFO(this.userInfo);
         this.$router.go(-1);
@@ -155,10 +170,13 @@ export default {
 }
 
 .loginForm .input_container button {
-  font-size: .65rem;
+  font-size: .6rem;
   color: #fff;
+  background-color: #999;
   font-family: Helvetica Neue, Tahoma, Arial;
   padding: .28rem .4rem;
+  border: none;
+  outline: none;
   border-radius: 0.15rem;
 }
 

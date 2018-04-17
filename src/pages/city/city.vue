@@ -55,22 +55,7 @@ export default {
     }
   },
   mounted() {
-    // 获取当前城市
-    cityGuess().then(res => {
-      this.guessCity = res.name;
-      this.guessCityid = res.id;
-      this.showLoading = false;
-    })
-
-    //获取热门城市
-    hotcity().then(res => {
-      this.hotcity = res;
-    })
-
-    //获取所有城市
-    groupcity().then(res => {
-      this.groupcity = res;
-    })
+    this.initData();
   },
   components: {
     'v-headTop': headTop,
@@ -87,6 +72,24 @@ export default {
         }
       }
       return sortobj
+    }
+  },
+  methods: {
+    async initData() {
+      // 获取当前城市
+      await cityGuess().then(res => {
+        this.guessCity = res.name;
+        this.guessCityid = res.id;
+      });
+      //获取热门城市
+      await hotcity().then(res => {
+        this.hotcity = res;
+      });
+      //获取所有城市
+      await groupcity().then(res => {
+        this.groupcity = res;
+      });
+      this.showLoading = false;
     }
   }
 }

@@ -29,15 +29,15 @@
     </div>
     <div class="info-data">
       <ul class="clear">
-        <router-link to="/balance" tag="li" class="info-data-link">
+        <router-link to="/mine/balance" tag="li" class="info-data-link">
           <span class="info-data-top"><b>{{parseInt(balance).toFixed(2)}}</b>元</span>
           <span class="info-data-bottom">我的余额</span>
         </router-link>
-        <router-link to="/benefit" tag="li" class="info-data-link">
+        <router-link to="/mine/benefit" tag="li" class="info-data-link">
           <span class="info-data-top"><b>{{count}}</b>个</span>
           <span class="info-data-bottom">我的优惠</span>
         </router-link>
-        <router-link to="/points" tag="li" class="info-data-link">
+        <router-link to="/mine/points" tag="li" class="info-data-link">
           <span class="info-data-top"><b>{{pointNumber}}</b>分</span>
           <span class="info-data-bottom">我的积分</span>
         </router-link>
@@ -81,7 +81,7 @@
       <div class="exitlogin" @click="exitlogin">退出登录</div>
     </div>
     <v-footGuide></v-footGuide>
-    <transition name="router-slid" mode="out-in">
+    <transition name="move" mode="out-in">
       <router-view></router-view>
     </transition>
   </div>
@@ -381,15 +381,15 @@ export default {
   color: #f00;
 }
 
-.router-slid-enter-active,
-.router-slid-leave-active {
-  transition: all .4s;
+.move-enter-active,
+.move-leave-active {
+  transition: all .1s linear;
+  transform: translate3D(0, 0, 0);
 }
 
-.router-slid-enter,
-.router-slid-leave-active {
-  transform: translate3d(2rem, 0, 0);
-  opacity: 0;
+.move-enter,
+.move-leave-active {
+  transform: translate3D(100%, 0, 0);
 }
 
 </style>
